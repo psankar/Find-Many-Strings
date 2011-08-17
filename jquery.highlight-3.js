@@ -15,7 +15,6 @@ Johann Burkard
 */
 
 jQuery.fn.highlight = function(pat) {
-	alert ("Hello Scripts, Thankg God");
  function innerHighlight(node, pat) {
   var skip = 0;
   if (node.nodeType == 3) {
