@@ -6,21 +6,34 @@
 <script>
 	function search(that) {
 
-			var token = new String (t1.value);
+		var token = new String (t1.value);
 
-			chrome.tabs.insertCSS(null,
-			{file:"sfind.css"});
+		chrome.tabs.insertCSS(null,
+		{file:"sfind.css"});
 
-			chrome.tabs.executeScript(null,
-			{code:"$(document.body).highlight('"+token+"')"});
+		chrome.tabs.executeScript(null,
+		{code:"$(document.body).highlight('"+token+"')"});
 
-			window.close();
+		window.close();
 	}
+
+
+	function hl_clear(that) {
+
+		chrome.tabs.insertCSS(null,
+		{file:"sfind.css"});
+
+		chrome.tabs.executeScript(null,
+		{code:"$(document.body).removeHighlight()"});
+
+		window.close();
+	}
+
 </script>
 
 <input type="text" id="t1"/>
 <input type="text" id="t2"/>
 <input type="text" id="t3"/>
 <input type="text" id="t4"/>
-
-<button onclick="search(this)" id="click">
+<button onclick="search(this)" id="search_btn">Search</button>
+<button onclick="hl_clear(this)" id ="clear_btn">Clear</button>
