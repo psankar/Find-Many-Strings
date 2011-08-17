@@ -1,0 +1,26 @@
+<script src="jquery.js"></script>
+<script src="jquery.highlight-3.js"></script>
+
+<link rel="stylesheet" type="text/css" href="sfind.css">
+
+<script>
+	function search(that) {
+
+			var token = new String (t1.value);
+
+			chrome.tabs.insertCSS(null,
+			{file:"sfind.css"});
+
+			chrome.tabs.executeScript(null,
+			{code:"$(document.body).highlight('"+token+"')"});
+
+			window.close();
+	}
+</script>
+
+<input type="text" id="t1"/>
+<input type="text" id="t2"/>
+<input type="text" id="t3"/>
+<input type="text" id="t4"/>
+
+<button onclick="search(this)" id="click">
