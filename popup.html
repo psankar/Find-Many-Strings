@@ -8,12 +8,11 @@
 	function random_color() {
 
 		var letters = '0123456789ABCDEF'.split('');
-		var color = '.highlight { background-color: #';
+		var color = 'background: #';
 
 		for (var i = 0; i < 6; i++ ) {
 			color += letters[Math.round(Math.random() * 15)];
 		}
-		color += '}';
 
 		return color;
 	}
@@ -22,11 +21,8 @@
 
 		var token = new String (t1.value);
 
-		chrome.tabs.insertCSS(null,
-		{code:random_color()});
-
 		chrome.tabs.executeScript(null,
-		{code:"$(document.body).highlight('"+token+"')"});
+		{code:"$(document.body).highlight('"+token+"','"+random_color()+"')"});
 
 		window.close();
 	}
@@ -42,9 +38,7 @@
 
 </script>
 
+Please enter the text which should be highlighted:
 <input type="text" id="t1"/>
-<input type="text" id="t2"/>
-<input type="text" id="t3"/>
-<input type="text" id="t4"/>
 <button onclick="search(this)" id="search_btn">Search</button>
 <button onclick="hl_clear(this)" id ="clear_btn">Clear</button>
