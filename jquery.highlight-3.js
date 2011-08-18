@@ -14,15 +14,15 @@ Johann Burkard
 
 */
 
-jQuery.fn.highlight = function(pat, colo) {
- function innerHighlight(node, pat, colo) {
+jQuery.fn.highlight = function(pat, fbgcolor) {
+ function innerHighlight(node, pat, fbgcolor) {
   var skip = 0;
   if (node.nodeType == 3) {
    var pos = node.data.toUpperCase().indexOf(pat);
    if (pos >= 0) {
     var spannode = document.createElement('span');
     spannode.className = 'highlight';
-    spannode.setAttribute('style', colo);
+    spannode.setAttribute('style', fbgcolor);
     var middlebit = node.splitText(pos);
     var endbit = middlebit.splitText(pat.length);
     var middleclone = middlebit.cloneNode(true);
@@ -33,13 +33,13 @@ jQuery.fn.highlight = function(pat, colo) {
   }
   else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
    for (var i = 0; i < node.childNodes.length; ++i) {
-    i += innerHighlight(node.childNodes[i], pat, colo);
+    i += innerHighlight(node.childNodes[i], pat, fbgcolor);
    }
   }
   return skip;
  }
  return this.each(function() {
-  innerHighlight(this, pat.toUpperCase(), colo);
+  innerHighlight(this, pat.toUpperCase(), fbgcolor);
  });
 };
 

@@ -4,17 +4,47 @@
 <link rel="stylesheet" type="text/css" href="sfind.css">
 
 <script>
-
 	function random_color() {
 
-		var letters = '0123456789ABCDEF'.split('');
-		var color = 'background: #';
+		var colo = 'background: #';
 
-		for (var i = 0; i < 6; i++ ) {
-			color += letters[Math.round(Math.random() * 15)];
+		var r, g, b;
+
+		r = Math.round(Math.random() * 0x55);
+		g = Math.round(Math.random() * 0xCC);
+		b = Math.round(Math.random() * 0xFF);
+
+		var num;
+
+		num = r.toString(16);
+		if (num.length < 2) {
+			colo += '0'; }
+		colo += num;
+
+		num = g.toString(16);
+		if (num.length < 2) {
+			colo += '0'; }
+		colo += num;
+
+		num = b.toString(16);
+		if (num.length < 2) {
+			colo += '0'; }
+		colo += num;
+
+		/* The formula for calculating luminance is taken from
+		 * http://www.paciellogroup.com/resources/contrast-analyser.html
+		 *
+		 * If there are better methods to change, please let me know.
+		 */
+		var luminance = (r * 299 + g * 587 + b * 114 ) / 1000;
+
+		if (luminance < 125) {
+			colo += '; color: #FFFFFF';
+		} else {
+			colo += '; color: #000000';
 		}
 
-		return color;
+		return colo;
 	}
 
 	function search(that) {
