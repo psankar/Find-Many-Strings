@@ -81,5 +81,13 @@ body {
 Please enter the word to highlight :</br></br>
 <input type="text" id="t1"/></br></br>
 <button onclick="search(this)" id="search_btn">Search</button>
+<script>
+$("#t1").keypress(function(event) {
+	if ( event.which == 13 ) {
+		$("#search_btn").click();
+	}
+});
+</script>
+
 <button onclick="hl_clear(this)" id ="clear_btn">Clear</button>
 <script>t1.focus()</script>
