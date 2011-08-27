@@ -23,7 +23,7 @@ jQuery.fn.highlight = function(pat, fbgcolor) {
     var spannode = document.createElement('span');
     spannode.className = 'highlight';
     // Setting padding & margin to 0px to fix this -- https://github.com/curiosity/Find-Many-Strings/issues/1
-    fgcolor += "padding: 0px; margin: 0px;";
+    fbgcolor += ";padding: 0px; margin: 0px;";
     spannode.setAttribute('style', fbgcolor);
     var middlebit = node.splitText(pos);
     var endbit = middlebit.splitText(pat.length);
