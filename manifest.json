@@ -1,6 +1,6 @@
 {
   "name": "Find Many Strings",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Search and highlight multiple strings in webpages",
   "browser_action": {
     "default_icon": "icon.png",
