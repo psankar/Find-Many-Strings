@@ -14,7 +14,7 @@ The extension only highlights the search strings and does not allow you to navig
 External References
 ===================
 
-All the source code of this extension is written by me, except the two js files mentioned below, which I copied and used.
+All the source code of this extension are written by Sankar P <sankar.curiosity@gmail.com> and Varunkumar Nagarajan <varunkumar.n@gmail.com>, except the two js files mentioned below, which we copied and used.
 
 	a) jquery.js: Generic jquery library.
 
@@ -38,3 +38,4 @@ Sankar P
 http://psankar.blogspot.com
 
 Dated: Fri Aug 19 16:44:27 IST 2011
+Updated: Sun Aug 28 10:48:17 IST 2011
