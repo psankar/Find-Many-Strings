@@ -1,93 +1,20 @@
-<script src="jquery.js"></script>
-<script src="jquery.highlight-3.js"></script>
-
-<script>
-	function random_color() {
-
-		var colo = 'background: #';
-
-		var r, g, b;
-
-		r = Math.round(Math.random() * 0xFF);
-		g = Math.round(Math.random() * 0xFF);
-		b = Math.round(Math.random() * 0xFF);
-
-		var num;
-
-		num = r.toString(16);
-		if (num.length < 2) {
-			colo += '0'; }
-		colo += num;
-
-		num = g.toString(16);
-		if (num.length < 2) {
-			colo += '0'; }
-		colo += num;
-
-		num = b.toString(16);
-		if (num.length < 2) {
-			colo += '0'; }
-		colo += num;
-
-		/* The formula for calculating luminance is taken from
-		 * http://www.paciellogroup.com/resources/contrast-analyser.html
-		 *
-		 * If there are better methods to change, please let me know.
-		 */
-		var luminance = (r * 299 + g * 587 + b * 114 ) / 1000;
-
-		if (luminance < 125) {
-			colo += '; color: #FFFFFF';
-		} else {
-			colo += '; color: #000000';
-		}
-
-		return colo;
-	}
-
-	function search(that) {
-
-		var token = new String (t1.value);
-
-		chrome.tabs.executeScript(null,
-		{code:"$(document.body).highlight('"+token+"','"+random_color()+"')"});
-
-		window.close();
-	}
-
-
-	function hl_clear(that) {
-
-		chrome.tabs.executeScript(null,
-		{code:"$(document.body).removeHighlight()"});
-
-		window.close();
-	}
-
-</script>
-
 <style>
-body {
-  overflow: hidden;
-  margin: 5px;
-  padding: 0px;
-  background: black;
-  color: white;
-  width: 300px;
-  font-family: 'Droid Sans', arial, sans-serif;
-}
+    body {
+        overflow: hidden;
+        margin: 5px;
+        padding: 0px;
+        background: black;
+        color: white;
+        width: 300px;
+        font-family: 'Droid Sans', arial, sans-serif;
+    }
 </style>
 
 Please enter the word to highlight :</br></br>
 <input type="text" id="t1"/></br></br>
 <button onclick="search(this)" id="search_btn">Search</button>
-<script>
-$("#t1").keypress(function(event) {
-	if ( event.which == 13 ) {
-		$("#search_btn").click();
-	}
-});
-</script>
-
 <button onclick="hl_clear(this)" id ="clear_btn">Clear all highlights</button>
-<script>t1.focus()</script>
+
+<script src="jquery.js"></script>
+<script src="jquery.highlight-3.js"></script>
+<script src="app.js"></script>
