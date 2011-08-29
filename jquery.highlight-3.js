@@ -48,9 +48,9 @@ jQuery.fn.highlight = function(pat, fbgcolor) {
 jQuery.fn.removeHighlight = function() {
  return this.find("span.highlight").each(function() {
   this.parentNode.firstChild.nodeName;
-  var text = document.createTextNode(this.textContent);
+  var txtNode = document.createTextNode(this.textContent);
   with (this.parentNode) {
-   replaceChild(text, this);
+   replaceChild(txtNode, this);
    normalize();
   }
  }).end();
