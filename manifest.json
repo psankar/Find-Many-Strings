@@ -1,10 +1,11 @@
 {
+  "manifest_version": 2,
   "name": "Find Many Strings",
-  "version": "1.4",
+  "version": "1.5",
   "description": "Search and highlight multiple strings in webpages",
   "browser_action": {
     "default_icon": "icon.png",
-    "popup": "popup.html"
+    "default_popup": "popup.html"
   },
   "content_scripts": [ {
       "matches": [ "<all_urls>" ],

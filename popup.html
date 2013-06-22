@@ -1,20 +1,29 @@
-<style>
-    body {
-        overflow: hidden;
-        margin: 5px;
-        padding: 0px;
-        background: black;
-        color: white;
-        width: 300px;
-        font-family: 'Droid Sans', arial, sans-serif;
-    }
-</style>
+<!doctype html>
+<html>
+<head>
+  <title>Find Many Strings</title>
+  <style>
+  body {
+    min-width: 357px;
+    margin: 5px;
+    background: black;
+    color: white;
+    overflow-x: hidden;
+    font-family: 'Droid Sans', arial, sans-serif;
+  }
+  </style>
 
-Please enter the word to highlight :</br></br>
-<input type="text" id="t1"/></br></br>
-<button onclick="search(this)" id="search_btn">Search</button>
-<button onclick="hl_clear(this)" id ="clear_btn">Clear all highlights</button>
+  <script src="jquery.js"></script>
+  <script src="jquery.highlight-3.js"></script>
+  <script src="app.js"></script>
 
-<script src="jquery.js"></script>
-<script src="jquery.highlight-3.js"></script>
-<script src="app.js"></script>
+</head>
+<body>
+  <div>
+    Please enter the word to highlight :</br></br>
+    <input type="text" id="t1"/></br></br>
+    <button id="search_btn">Search</button>
+    <button id ="clear_btn">Clear all highlights</button>
+  </div>
+</body>
+</html>

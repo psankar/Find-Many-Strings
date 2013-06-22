@@ -5,14 +5,6 @@ chrome.tabs.getSelected(null, function(tab) {
     });
 });
 
-$("#t1").keypress(function(event) {
-    if ( event.which == 13 ) {
-        $("#search_btn").click();
-    }
-});
-
-$("#t1").focus();
-
 function random_color() {
 
     var style = 'background: ';
@@ -30,9 +22,9 @@ function random_color() {
      *
      * If there are better methods to change, please let me know.
      */
-    var luminance = (r * 299 + g * 587 + b * 114 ) / 1000;
+     var luminance = (r * 299 + g * 587 + b * 114 ) / 1000;
 
-    if (luminance < 125) {
+     if (luminance < 125) {
         style += 'color: #FFFFFF';
     } else {
         style += 'color: #000000';
@@ -42,19 +34,34 @@ function random_color() {
 }
 
 function search(that) {
-
     var token = new String (t1.value);
 
     chrome.tabs.executeScript(null,
-            {code:"$(document.body).highlight('"+token+"','"+random_color()+"')"});
+        {code:"$(document.body).highlight('"+token+"','"+random_color()+"')"});
 
     window.close();
 }
-
 
 function hl_clear(that) {
     chrome.tabs.executeScript(null,
-            {code:"$(document.body).removeHighlight()"});
+        {code:"$(document.body).removeHighlight()"});
 
     window.close();
 }
+
+function handle_keypress() {
+    if ( event.which == 13 ) {
+        $("#search_btn").click();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  var searchButton = document.getElementById('search_btn');
+  searchButton.addEventListener('click', search);
+
+  var clearButton = document.getElementById('clear_btn');
+  clearButton.addEventListener('click', hl_clear);
+
+  var searchQuery = document.getElementById('t1');
+  searchQuery.addEventListener('keypress', handle_keypress);
+});
