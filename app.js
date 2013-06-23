@@ -34,10 +34,17 @@ function random_color() {
 }
 
 function search(that) {
-    var token = new String (t1.value);
+    var inputText = new String (t1.value);
 
-    chrome.tabs.executeScript(null,
-        {code:"$(document.body).highlight('"+token+"','"+random_color()+"')"});
+    // In case someone removed the delimiter, assume ","" to be the default delim
+    var delimToken = delim.value ? delim.value : ",";
+
+    var tokens = inputText.split(delimToken);
+
+    for (var i=0; i < tokens.length; i++) {
+        chrome.tabs.executeScript(null,
+        {code:"$(document.body).highlight('"+tokens[i]+"','"+random_color()+"')"});
+    }
 
     window.close();
 }
@@ -64,4 +71,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var searchQuery = document.getElementById('t1');
   searchQuery.addEventListener('keypress', handle_keypress);
+  var delimField = document.getElementById('delim');
+  delimField.addEventListener('keypress', handle_keypress);
 });
