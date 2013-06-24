@@ -46,6 +46,10 @@ function search(that) {
         {code:"$(document.body).highlight('"+tokens[i]+"','"+random_color()+"')"});
     }
 
+    // Scroll such that the last occurence of the first search token is visible
+    chrome.tabs.executeScript(null,
+    {code:"$(document.body).scrollTop($(\"*:contains('"+ tokens[0] +"'):last\").offset().top)"});
+
     window.close();
 }
 
