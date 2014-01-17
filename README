@@ -9,6 +9,8 @@ The icon for this extension is the Tamil word "தேடு" which means "Search
 
 The extension only highlights the search strings and does not allow you to navigate to previous/next matches. It may be easy to add but I have not found an usecase for this. Patches are welcome for this if you find it useful or want to practice Javascript. Also, it may make the UI complex.
 
+Screencast of the extension http://www.youtube.com/watch?v=IgB0_P5pPz4
+Install the extension from  https://chrome.google.com/webstore/detail/find-many-strings/phabnclfbnmhmoipebjdfhkiacojlcnc
 
 
 External References
