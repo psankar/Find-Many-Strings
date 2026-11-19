@@ -16,6 +16,41 @@
     color: #ff8080;
     margin-top: 10px;
   }
+  #terms {
+    margin-top: 10px;
+  }
+  .term {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+    border-top: 1px solid #333;
+  }
+  .chip {
+    flex: 1;
+    min-width: 0;
+    padding: 1px 6px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .arrow {
+    width: 26px;
+    background: #222;
+    color: white;
+    border: 1px solid #555;
+    cursor: pointer;
+  }
+  .arrow:disabled {
+    color: #555;
+    cursor: default;
+  }
+  .count {
+    min-width: 56px;
+    text-align: right;
+    color: #ccc;
+    font-variant-numeric: tabular-nums;
+  }
   </style>
 
   <script src="app.js"></script>
@@ -26,6 +61,7 @@
     Split the strings using: <input type="text" id="delim" value=","/><br><br>
     <button id="search_btn">Search</button>
     <button id ="clear_btn">Clear all highlights</button>
+    <div id="terms"></div>
     <div id="status" hidden></div>
 </body>
 </html>

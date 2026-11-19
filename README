@@ -7,7 +7,7 @@ The extension is open-sourced and licensed under the MIT License. So you can use
 
 The icon for this extension is the Tamil word "தேடு" which means "Search". I used the awesome Gimp project to create this icon.
 
-The extension only highlights the search strings and does not allow you to navigate to previous/next matches. It may be easy to add but I have not found an usecase for this. Patches are welcome for this if you find it useful or want to practice Javascript. Also, it may make the UI complex.
+After a search, the popup lists each search string in its highlight color with ▲ ▼ buttons and a "current / total" counter, so you can step through the matches of each string separately. The page scrolls to the selected match and outlines it. Reopening the popup on the same page brings the list back.
 
 Screencast of the extension http://www.youtube.com/watch?v=IgB0_P5pPz4
 

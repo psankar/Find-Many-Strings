@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Find Many Strings",
-  "version": "2.0",
+  "version": "2.1",
   "description": "Search and highlight multiple strings in webpages",
   "icons": {
     "128": "icon.png"

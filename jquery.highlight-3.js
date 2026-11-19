@@ -12,19 +12,25 @@ Johann Burkard
 <http://johannburkard.de>
 <mailto:jb@eaio.com>
 
+Modified for Find Many Strings: uses the "fms-highlight" class so that the
+page's own ".highlight" elements are never touched, and accepts extra data
+attributes so each match can be tied to its search term.
+
 */
 
-jQuery.fn.highlight = function(pat, fbgcolor) {
+jQuery.fn.highlight = function(pat, fbgcolor, attrs) {
  function innerHighlight(node, pat, fbgcolor) {
   var skip = 0;
   if (node.nodeType == 3) {
    var pos = node.data.toUpperCase().indexOf(pat);
    if (pos >= 0) {
     var spannode = document.createElement('span');
-    spannode.className = 'highlight';
+    spannode.className = 'fms-highlight';
     // Setting padding & margin to 0px to fix this -- https://github.com/curiosity/Find-Many-Strings/issues/1
-    fbgcolor += ";padding: 0px; margin: 0px;";
-    spannode.setAttribute('style', fbgcolor);
+    spannode.setAttribute('style', fbgcolor + ";padding: 0px; margin: 0px;");
+    for (var name in attrs) {
+     spannode.setAttribute(name, attrs[name]);
+    }
     var middlebit = node.splitText(pos);
     var endbit = middlebit.splitText(pat.length);
     var middleclone = middlebit.cloneNode(true);
@@ -46,12 +52,9 @@ jQuery.fn.highlight = function(pat, fbgcolor) {
 };
 
 jQuery.fn.removeHighlight = function() {
- return this.find("span.highlight").each(function() {
-  this.parentNode.firstChild.nodeName;
-  var txtNode = document.createTextNode(this.textContent);
-  with (this.parentNode) {
-   replaceChild(txtNode, this);
-   normalize();
-  }
+ return this.find("span.fms-highlight").each(function() {
+  var parent = this.parentNode;
+  parent.replaceChild(document.createTextNode(this.textContent), this);
+  parent.normalize();
  }).end();
 };

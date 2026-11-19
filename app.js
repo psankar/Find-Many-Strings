@@ -1,6 +1,6 @@
-// Scripts that the highlight functions below depend on. They are injected
-// into the active tab only when the user acts from the popup (activeTab).
-var PAGE_LIBS = ["jquery.js", "jquery.highlight-3.js"];
+// Scripts that the page side of the extension needs. They are injected into
+// the active tab only when the user acts from the popup (activeTab).
+var PAGE_LIBS = ["jquery.js", "jquery.highlight-3.js", "page.js"];
 
 function show_error(message) {
     var status = document.getElementById("status");
@@ -13,37 +13,26 @@ async function get_active_tab() {
     return tabs[0];
 }
 
-// The functions below are serialized and run inside the page, so they must
-// not reference anything from this file. Search terms always travel as
-// arguments, never as part of a code string.
-
-function page_get_selection() {
-    return window.getSelection().toString();
-}
-
-function page_highlight(tokens, styles) {
-    for (var i = 0; i < tokens.length; i++) {
-        $(document.body).highlight(tokens[i], styles[i]);
-    }
-
-    // Scroll such that the last occurrence of the first search token is visible
-    var first = tokens[0].toUpperCase();
-    var last = $("span.highlight").filter(function () {
-        return this.textContent.toUpperCase() === first;
-    }).last();
-    if (last.length) {
-        last[0].scrollIntoView({block: "center"});
-    }
-}
-
-function page_clear() {
-    $(document.body).removeHighlight();
-}
-
-async function run_in_page(func, args) {
+// Runs func(...args) in the page and returns its result. func is serialized,
+// so it must not reference anything from this file; search terms always
+// travel as arguments, never as part of a code string.
+async function run_in_page(func, args, inject) {
     var tab = await get_active_tab();
-    await chrome.scripting.executeScript({target: {tabId: tab.id}, files: PAGE_LIBS});
-    await chrome.scripting.executeScript({target: {tabId: tab.id}, func: func, args: args || []});
+    if (inject) {
+        var loaded = await chrome.scripting.executeScript({
+            target: {tabId: tab.id},
+            func: function () { return typeof window.fmsPage === "object"; }
+        });
+        if (!loaded[0].result) {
+            await chrome.scripting.executeScript({target: {tabId: tab.id}, files: PAGE_LIBS});
+        }
+    }
+    var results = await chrome.scripting.executeScript({
+        target: {tabId: tab.id},
+        func: func,
+        args: args || []
+    });
+    return results[0].result;
 }
 
 function random_color() {
@@ -74,6 +63,62 @@ function random_color() {
     return style;
 }
 
+// One row per search term: the term in its highlight color, ▲ ▼ and "n / total"
+function render_terms(summary) {
+    var list = document.getElementById("terms");
+    list.textContent = "";
+    if (!summary) {
+        return;
+    }
+
+    summary.terms.forEach(function (term, i) {
+        var row = document.createElement("div");
+        row.className = "term";
+
+        var chip = document.createElement("span");
+        chip.className = "chip";
+        chip.setAttribute("style", summary.styles[i]);
+        chip.textContent = term;
+        chip.title = term;
+
+        var up = document.createElement("button");
+        up.className = "arrow";
+        up.textContent = "▲";
+        up.title = "Previous match";
+        up.addEventListener("click", function () { step(i, -1); });
+
+        var down = document.createElement("button");
+        down.className = "arrow";
+        down.textContent = "▼";
+        down.title = "Next match";
+        down.addEventListener("click", function () { step(i, 1); });
+
+        var count = document.createElement("span");
+        count.className = "count";
+        var total = summary.counts[i];
+        var current = summary.current[i];
+        if (total === 0) {
+            count.textContent = "0 found";
+            up.disabled = down.disabled = true;
+        } else {
+            count.textContent = (current > 0 ? current : "–") + " / " + total;
+        }
+
+        row.append(chip, up, down, count);
+        list.appendChild(row);
+    });
+}
+
+async function step(termIndex, direction) {
+    try {
+        render_terms(await run_in_page(
+            function (i, d) { return window.fmsPage ? window.fmsPage.step(i, d) : null; },
+            [termIndex, direction]));
+    } catch (e) {
+        show_error("Cannot move between matches on this page: " + e.message);
+    }
+}
+
 async function search() {
     var inputText = document.getElementById("t1").value;
 
@@ -91,8 +136,9 @@ async function search() {
     var styles = tokens.map(random_color);
 
     try {
-        await run_in_page(page_highlight, [tokens, styles]);
-        window.close();
+        render_terms(await run_in_page(
+            function (t, s) { return window.fmsPage.highlight(t, s); },
+            [tokens, styles], true));
     } catch (e) {
         show_error("Cannot search on this page: " + e.message);
     }
@@ -100,24 +146,31 @@ async function search() {
 
 async function hl_clear() {
     try {
-        await run_in_page(page_clear);
+        await run_in_page(function () {
+            if (window.fmsPage) {
+                window.fmsPage.clear();
+            }
+        });
         window.close();
     } catch (e) {
         show_error("Cannot clear highlights on this page: " + e.message);
     }
 }
 
-// Populate the search box with the text selected from the page
-async function load_selection() {
+// Populate the search box with the text selected from the page, and show the
+// terms of the last search on this page, if any
+async function load_page_state() {
     try {
-        var tab = await get_active_tab();
-        var results = await chrome.scripting.executeScript({
-            target: {tabId: tab.id},
-            func: page_get_selection
+        var state = await run_in_page(function () {
+            return {
+                selection: window.getSelection().toString(),
+                summary: window.fmsPage ? window.fmsPage.summary() : null
+            };
         });
-        if (results && results[0] && results[0].result) {
-            document.getElementById("t1").value = results[0].result;
+        if (state.selection) {
+            document.getElementById("t1").value = state.selection;
         }
+        render_terms(state.summary);
     } catch (e) {
         // Pages such as chrome:// URLs and the Web Store cannot be scripted
         show_error("This page cannot be searched by extensions.");
@@ -136,5 +189,5 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('t1').addEventListener('keypress', handle_keypress);
   document.getElementById('delim').addEventListener('keypress', handle_keypress);
 
-  load_selection();
+  load_page_state();
 });
