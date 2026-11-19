@@ -9,6 +9,8 @@ The icon for this extension is the Tamil word "தேடு" which means "Search
 
 After a search, the popup lists each search string in its highlight color with ▲ ▼ buttons and a "current / total" counter, so you can step through the matches of each string separately. The page scrolls to the selected match and outlines it. Reopening the popup on the same page brings the list back.
 
+Highlight colors come from a fixed set of eight light colors with dark text, chosen to stay readable on both light and dark websites. A string keeps its color across searches on the same page until the highlights are cleared. The popup follows the browser's light or dark theme.
+
 Screencast of the extension http://www.youtube.com/watch?v=IgB0_P5pPz4
 
 Privacy: the extension uses only the "activeTab" and "scripting" permissions. It can read or change a page only after you click its toolbar icon on that page, and it sends no data anywhere.

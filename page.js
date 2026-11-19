@@ -3,8 +3,36 @@
 // in the DOM, so the page itself cannot read or change it.
 if (typeof window.fmsPage !== "object") {
     window.fmsPage = (function () {
-        // {searchId, terms, styles, current} for the latest search, or null
+        var TEXT = "#1f1f1f";
+        // A thin dark edge so pale highlights still stand out on white pages
+        var EDGE = "0 0 0 1px rgba(0, 0, 0, 0.35)";
+        // Current match: dark ring inside a white ring, visible on light and dark pages
+        var CURRENT = "0 0 0 2px #1f1f1f, 0 0 0 4px #ffffff";
+
+        // {searchId, terms, colors, current} for the latest search, or null
         var state = null;
+        // Colors stay with a term across searches until highlights are cleared
+        var colorOf = {};
+        var nextColor = 0;
+
+        // !important so that site styles cannot hide the highlight.
+        // Padding & margin are 0 to fix https://github.com/curiosity/Find-Many-Strings/issues/1
+        function style(color) {
+            return "background-color: " + color + " !important;" +
+                "color: " + TEXT + " !important;" +
+                "box-shadow: " + EDGE + " !important;" +
+                "border-radius: 2px !important;" +
+                "padding: 0px !important; margin: 0px !important;";
+        }
+
+        function pick_color(term, palette) {
+            var key = term.toUpperCase();
+            if (!(key in colorOf)) {
+                colorOf[key] = palette[nextColor % palette.length];
+                nextColor++;
+            }
+            return colorOf[key];
+        }
 
         function matches(termIndex) {
             return document.querySelectorAll(
@@ -18,7 +46,7 @@ if (typeof window.fmsPage !== "object") {
             }
             return {
                 terms: state.terms,
-                styles: state.styles,
+                colors: state.colors,
                 current: state.current,
                 counts: state.terms.map(function (term, i) {
                     return matches(i).length;
@@ -33,29 +61,29 @@ if (typeof window.fmsPage !== "object") {
             var previous = document.querySelector("span.fms-current");
             if (previous) {
                 previous.classList.remove("fms-current");
-                previous.style.outline = "";
-                previous.style.outlineOffset = "";
+                previous.style.setProperty("box-shadow", EDGE, "important");
             }
 
             var span = spans[position - 1];
             span.classList.add("fms-current");
-            // The outline takes the span's text color, which already contrasts with its background
-            span.style.outline = "2px solid";
-            span.style.outlineOffset = "1px";
+            span.style.setProperty("box-shadow", CURRENT, "important");
             span.scrollIntoView({block: "center"});
         }
 
         return {
-            highlight: function (tokens, styles) {
+            highlight: function (tokens, palette) {
                 var searchId = String(Date.now());
+                var colors = tokens.map(function (token) {
+                    return pick_color(token, palette);
+                });
                 state = {
                     searchId: searchId,
                     terms: tokens,
-                    styles: styles,
+                    colors: colors,
                     current: tokens.map(function () { return 0; })
                 };
                 for (var i = 0; i < tokens.length; i++) {
-                    $(document.body).highlight(tokens[i], styles[i], {
+                    $(document.body).highlight(tokens[i], style(colors[i]), {
                         "data-fms-search": searchId,
                         "data-fms-term": i
                     });
@@ -91,6 +119,8 @@ if (typeof window.fmsPage !== "object") {
             clear: function () {
                 $(document.body).removeHighlight();
                 state = null;
+                colorOf = {};
+                nextColor = 0;
             },
 
             summary: summary

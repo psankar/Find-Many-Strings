@@ -18,16 +18,16 @@ attributes so each match can be tied to its search term.
 
 */
 
-jQuery.fn.highlight = function(pat, fbgcolor, attrs) {
- function innerHighlight(node, pat, fbgcolor) {
+// style is the complete inline style for each highlight span
+jQuery.fn.highlight = function(pat, style, attrs) {
+ function innerHighlight(node, pat, style) {
   var skip = 0;
   if (node.nodeType == 3) {
    var pos = node.data.toUpperCase().indexOf(pat);
    if (pos >= 0) {
     var spannode = document.createElement('span');
     spannode.className = 'fms-highlight';
-    // Setting padding & margin to 0px to fix this -- https://github.com/curiosity/Find-Many-Strings/issues/1
-    spannode.setAttribute('style', fbgcolor + ";padding: 0px; margin: 0px;");
+    spannode.setAttribute('style', style);
     for (var name in attrs) {
      spannode.setAttribute(name, attrs[name]);
     }
@@ -41,13 +41,13 @@ jQuery.fn.highlight = function(pat, fbgcolor, attrs) {
   }
   else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
    for (var i = 0; i < node.childNodes.length; ++i) {
-    i += innerHighlight(node.childNodes[i], pat, fbgcolor);
+    i += innerHighlight(node.childNodes[i], pat, style);
    }
   }
   return skip;
  }
  return this.each(function() {
-  innerHighlight(this, pat.toUpperCase(), fbgcolor);
+  innerHighlight(this, pat.toUpperCase(), style);
  });
 };
 

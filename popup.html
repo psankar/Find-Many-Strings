@@ -2,19 +2,113 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="color-scheme" content="light dark">
   <title>Find Many Strings</title>
   <style>
+  :root {
+    --bg: #ffffff;
+    --text: #1f1f1f;
+    --muted: #5f6368;
+    --field-bg: #ffffff;
+    --field-border: #9aa0a6;
+    --line: #e8eaed;
+    --button-bg: #ffffff;
+    --button-border: #dadce0;
+    --button-hover: #f1f3f4;
+    --primary: #1a73e8;
+    --primary-hover: #1765cc;
+    --error: #c5221f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #202124;
+      --text: #e8eaed;
+      --muted: #9aa0a6;
+      --field-bg: #303134;
+      --field-border: #5f6368;
+      --line: #3c4043;
+      --button-bg: #303134;
+      --button-border: #5f6368;
+      --button-hover: #3c4043;
+      --primary: #8ab4f8;
+      --primary-hover: #aecbfa;
+      --error: #f28b82;
+    }
+  }
   body {
-    min-width: 357px;
-    margin: 5px;
-    background: black;
-    color: white;
-    overflow-x: hidden;
-    font-family: 'Droid Sans', arial, sans-serif;
+    width: 320px;
+    margin: 0;
+    padding: 14px;
+    background: var(--bg);
+    color: var(--text);
+    font: 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  input {
+    box-sizing: border-box;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid var(--field-border);
+    border-radius: 6px;
+    background: var(--field-bg);
+    color: var(--text);
+    font: inherit;
+  }
+  input:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: -1px;
+  }
+  #t1 {
+    width: 100%;
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .bar label {
+    margin: 0;
+  }
+  #delim {
+    width: 34px;
+    height: 28px;
+    padding: 0;
+    text-align: center;
+  }
+  .spacer {
+    flex: 1;
+  }
+  button {
+    height: 28px;
+    padding: 0 12px;
+    border: 1px solid var(--button-border);
+    border-radius: 6px;
+    background: var(--button-bg);
+    color: var(--text);
+    font: 500 13px system-ui, -apple-system, "Segoe UI", sans-serif;
+    cursor: pointer;
+  }
+  button:hover {
+    background: var(--button-hover);
+  }
+  #search_btn {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--bg);
+  }
+  #search_btn:hover {
+    border-color: var(--primary-hover);
+    background: var(--primary-hover);
   }
   #status {
-    color: #ff8080;
     margin-top: 10px;
+    color: var(--error);
   }
   #terms {
     margin-top: 10px;
@@ -23,32 +117,42 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 0;
-    border-top: 1px solid #333;
+    padding: 6px 0;
+    border-top: 1px solid var(--line);
+  }
+  /* A term with no matches: outlined instead of filled, so it never looks like a highlight color */
+  .term.zero .chip {
+    background: transparent !important;
+    border: 1px dashed var(--field-border);
+    padding: 1px 7px;
+    color: var(--muted);
+  }
+  button.arrow:disabled {
+    color: var(--field-border);
   }
   .chip {
     flex: 1;
     min-width: 0;
-    padding: 1px 6px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #1f1f1f;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-  .arrow {
+  button.arrow {
     width: 26px;
-    background: #222;
-    color: white;
-    border: 1px solid #555;
-    cursor: pointer;
+    height: 24px;
+    padding: 0;
+    font-size: 11px;
   }
-  .arrow:disabled {
-    color: #555;
+  button.arrow:disabled {
     cursor: default;
   }
   .count {
-    min-width: 56px;
+    min-width: 52px;
     text-align: right;
-    color: #ccc;
+    color: var(--muted);
     font-variant-numeric: tabular-nums;
   }
   </style>
@@ -57,10 +161,15 @@
 
 </head>
 <body>
-    String(s) to search for: <input type="text" id="t1"/><br><br>
-    Split the strings using: <input type="text" id="delim" value=","/><br><br>
-    <button id="search_btn">Search</button>
-    <button id ="clear_btn">Clear all highlights</button>
+    <label for="t1">Search for</label>
+    <input type="text" id="t1" placeholder="apple, banana, cherry" autofocus>
+    <div class="bar">
+      <label for="delim">Separator</label>
+      <input type="text" id="delim" value=",">
+      <span class="spacer"></span>
+      <button id="clear_btn" title="Clear all highlights">Clear</button>
+      <button id="search_btn">Search</button>
+    </div>
     <div id="terms"></div>
     <div id="status" hidden></div>
 </body>

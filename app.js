@@ -35,33 +35,19 @@ async function run_in_page(func, args, inject) {
     return results[0].result;
 }
 
-function random_color() {
-
-    var style = 'background: ';
-
-    var r, g, b;
-
-    r = Math.round(Math.random() * 0xFF);
-    g = Math.round(Math.random() * 0xFF);
-    b = Math.round(Math.random() * 0xFF);
-
-    style += 'rgba(' + r + ',' + g + ',' + b + ',1);';
-
-    /* The formula for calculating luminance is taken from
-     * http://www.paciellogroup.com/resources/contrast-analyser.html
-     *
-     * If there are better methods to change, please let me know.
-     */
-     var luminance = (r * 299 + g * 587 + b * 114 ) / 1000;
-
-     if (luminance < 125) {
-        style += 'color: #FFFFFF';
-    } else {
-        style += 'color: #000000';
-    }
-
-    return style;
-}
+// Highlight colors, used in this order. All are light enough for the dark
+// highlight text (#1f1f1f) to read at 6.9:1 or better, and stand out
+// strongly on dark pages; a thin dark edge covers white pages.
+var PALETTE = [
+    "#FFE066", // yellow
+    "#9AD0F5", // blue
+    "#F7A1C4", // pink
+    "#A8E6A1", // green
+    "#FFB870", // orange
+    "#C9B6F2", // purple
+    "#8FE3D6", // teal
+    "#F28B82"  // red
+];
 
 // One row per search term: the term in its highlight color, ▲ ▼ and "n / total"
 function render_terms(summary) {
@@ -73,11 +59,11 @@ function render_terms(summary) {
 
     summary.terms.forEach(function (term, i) {
         var row = document.createElement("div");
-        row.className = "term";
+        row.className = summary.counts[i] === 0 ? "term zero" : "term";
 
         var chip = document.createElement("span");
         chip.className = "chip";
-        chip.setAttribute("style", summary.styles[i]);
+        chip.style.backgroundColor = summary.colors[i];
         chip.textContent = term;
         chip.title = term;
 
@@ -133,12 +119,10 @@ async function search() {
         return;
     }
 
-    var styles = tokens.map(random_color);
-
     try {
         render_terms(await run_in_page(
-            function (t, s) { return window.fmsPage.highlight(t, s); },
-            [tokens, styles], true));
+            function (t, p) { return window.fmsPage.highlight(t, p); },
+            [tokens, PALETTE], true));
     } catch (e) {
         show_error("Cannot search on this page: " + e.message);
     }
@@ -167,8 +151,11 @@ async function load_page_state() {
                 summary: window.fmsPage ? window.fmsPage.summary() : null
             };
         });
+        var input = document.getElementById("t1");
         if (state.selection) {
-            document.getElementById("t1").value = state.selection;
+            input.value = state.selection;
+            // Selected, so typing replaces it
+            input.select();
         }
         render_terms(state.summary);
     } catch (e) {
