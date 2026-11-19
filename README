@@ -10,7 +10,14 @@ The icon for this extension is the Tamil word "தேடு" which means "Search
 The extension only highlights the search strings and does not allow you to navigate to previous/next matches. It may be easy to add but I have not found an usecase for this. Patches are welcome for this if you find it useful or want to practice Javascript. Also, it may make the UI complex.
 
 Screencast of the extension http://www.youtube.com/watch?v=IgB0_P5pPz4
-Install the extension from  https://chrome.google.com/webstore/detail/find-many-strings/phabnclfbnmhmoipebjdfhkiacojlcnc
+
+Privacy: the extension uses only the "activeTab" and "scripting" permissions. It can read or change a page only after you click its toolbar icon on that page, and it sends no data anywhere.
+
+Installing from source
+======================
+
+1. Open chrome://extensions and turn on "Developer mode".
+2. Click "Load unpacked" and select this directory.
 
 
 External References
@@ -18,7 +25,7 @@ External References
 
 All the source code of this extension are written by Sankar P <sankar.curiosity@gmail.com> and Varunkumar Nagarajan <varunkumar.n@gmail.com>, except the two js files mentioned below, which we copied and used.
 
-	a) jquery.js: Generic jquery library.
+	a) jquery.js: jQuery 4.1.0, the official minified build from https://code.jquery.com/jquery-4.1.0.min.js
 
 	b) jquery.highlight-3.js: This is written by Johann Burkard - http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html     I have used this for walking through the DOM tree. Thanks Johann :-)
 

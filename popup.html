@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 <head>
+  <meta charset="utf-8">
   <title>Find Many Strings</title>
   <style>
   body {
@@ -11,17 +12,20 @@
     overflow-x: hidden;
     font-family: 'Droid Sans', arial, sans-serif;
   }
+  #status {
+    color: #ff8080;
+    margin-top: 10px;
+  }
   </style>
 
-  <script src="jquery.js"></script>
-  <script src="jquery.highlight-3.js"></script>
   <script src="app.js"></script>
 
 </head>
 <body>
-    String(s) to search for: <input type="text" id="t1"/></br></br>
-    Split the strings using: <input type="text" id="delim" value=","/></br></br>
+    String(s) to search for: <input type="text" id="t1"/><br><br>
+    Split the strings using: <input type="text" id="delim" value=","/><br><br>
     <button id="search_btn">Search</button>
     <button id ="clear_btn">Clear all highlights</button>
+    <div id="status" hidden></div>
 </body>
 </html>
