@@ -5,7 +5,7 @@ Find Many Strings
 
 The extension is open-sourced and licensed under the MIT License. So you can use the extensions without feeling paranoid :-)
 
-The icon for this extension is the Tamil word "தேடு" which means "Search". I used the awesome Gimp project to create this icon.
+The icon for this extension is the Tamil word "தேடு" which means "Search". The original was made with the awesome Gimp project. The current version shows the word on two highlight colors and is drawn in icons/icon.svg using the Mukta Malar font (SIL Open Font License). The SVG needs that font installed to render; the PNGs in icons/ are exported from it.
 
 After a search, the popup lists each search string in its highlight color with ▲ ▼ buttons and a "current / total" counter, so you can step through the matches of each string separately. The page scrolls to the selected match and outlines it. Reopening the popup on the same page brings the list back.
 

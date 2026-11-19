@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<rect x="4.5" y="4.5" width="119" height="119" rx="28" fill="#ffffff" stroke="#c4c7c5"/>
+<rect x="10" y="30" width="62" height="52" rx="8" fill="#FFE066" transform="rotate(-5 41 56)"/>
+<rect x="62" y="46" width="56" height="52" rx="8" fill="#9AD0F5" transform="rotate(4 90 72)"/>
+<text x="41" y="73" text-anchor="middle" font-family="Mukta Malar" font-weight="800" font-size="44" fill="#1f1f1f">தே</text>
+<text x="90" y="89" text-anchor="middle" font-family="Mukta Malar" font-weight="800" font-size="44" fill="#1f1f1f">டு</text>
+</svg>
